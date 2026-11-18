@@ -1,2 +1,4 @@
 pytest
 allure-pytest
+# optional: LLM classification (python -m allure_magic.triage --llm)
+# anthropic

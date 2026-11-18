@@ -1,18 +1,23 @@
-repositories {
-    jcenter()
+plugins {
+    id 'java-library-distribution'
 }
 
-apply plugin: 'java-library-distribution'
-
-jar {
-    archiveName = 'plugin.jar'
+repositories {
+    mavenCentral()
 }
 
 description = 'Allure Global Info Plugin'
 
-dependencies {
-    compileOnly('io.qameta.allure:allure-plugin-api:2.20.1')
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
-// artifacts.add("allurePlugin", tasks.distZip)
-artifacts.add("archives", tasks.distZip)
+dependencies {
+    // keep in sync with the Allure distribution in allure/allure-<version>
+    compileOnly 'io.qameta.allure:allure-plugin-api:2.21.0'
+}
+
+jar {
+    archiveFileName = 'plugin.jar'
+}

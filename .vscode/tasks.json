@@ -3,7 +3,8 @@
     "tasks": [
         {
             "label": "$(graph) allure",
-            "command": "allure\\allure-2.21.0\\bin\\allure serve allure-results",
+            "command": "allure/allure-2.21.0/bin/allure serve allure-results",
+            "windows": { "command": "allure\\allure-2.21.0\\bin\\allure.bat serve allure-results" },
             "type": "shell",
             "presentation": {
                 "echo": true,

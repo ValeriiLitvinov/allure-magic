@@ -1,0 +1,19 @@
+[project]
+name = "allure-magic"
+version = "0.2.0"
+description = "Custom Allure plugins plus an AI-assisted failure triage step"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.optional-dependencies]
+llm = ["anthropic>=0.40"]
+dev = ["pytest", "allure-pytest"]
+
+[project.scripts]
+allure-magic-triage = "allure_magic.triage:main"
+
+[tool.setuptools]
+packages = ["allure_magic"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

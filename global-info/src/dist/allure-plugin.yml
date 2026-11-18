@@ -1,6 +1,6 @@
 id: global-info
 name: Global Warnings
-description: More detailed explanation of what global-info-widget plugin does.
+description: Shows QA info, warnings and AI triage summaries on the report overview (data comes from global-info.json).
 extensions:
 - i1skyi.GlobalInfoWidget
 jsFiles:
