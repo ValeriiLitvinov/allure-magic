@@ -1,3 +1,10 @@
+const escapeHtml = (v) => String(v === undefined || v === null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+// only allow web/mail links; blocks javascript: and data: URLs
+const safeUrl = (v) => /^(https?:\/\/|mailto:)/i.test(String(v || '').trim()) ? escapeHtml(String(v).trim()) : '#';
+
 class WidgetTemplate {
 
     constructor(data) {
@@ -13,6 +20,15 @@ class WidgetTemplate {
                         this.stack(
                             this.entryName(entry.name),
                             this.linkEntryValue(entry.display_value, entry.value)
+                        )
+                    );
+                    break;
+                case 'html':
+                    // trusted raw HTML, opt-in only
+                    entries += this.entryBase(
+                        this.stack(
+                            this.entryName(entry.name),
+                            this.entryValue(entry.value, true)
                         )
                     );
                     break;
@@ -57,8 +73,8 @@ class WidgetTemplate {
     optional = (value, alternative, condition = true) => condition ? value : alternative
     bodyTable = (innerHtml) => `<div class="table table_hover widget__table">${innerHtml}</div >`
     title = (title, subtitle) => subtitle ?
-        `<h2 class="widget__title" >${title} <span class="widget__subtitle"> ${subtitle}</span></h2>`
-        : `<h2 class="widget__title" >${title}</h2>`
+        `<h2 class="widget__title" >${escapeHtml(title)} <span class="widget__subtitle"> ${escapeHtml(subtitle)}</span></h2>`
+        : `<h2 class="widget__title" >${escapeHtml(title)}</h2>`
     entryBase = (entryHtml) => `<div class="table__row" disabled>${entryHtml}</div>`
     entryMore = (showMoreText) => `
         <a class="table__row clickable">
@@ -72,13 +88,13 @@ class WidgetTemplate {
                 ${noContentText}
             </div>
         </div>`
-    entryName = (name) => `<div class="table__col long-line shorter_col">${name}</div>`
-    entryValue = (value) => `<div class="table__col long-line">${value}</div>`
+    entryName = (name) => `<div class="table__col long-line shorter_col">${escapeHtml(name)}</div>`
+    entryValue = (value, raw = false) => `<div class="table__col long-line">${raw ? value : escapeHtml(value)}</div>`
     linkEntryValue = (text, link) => `
         <div class="table__col long-line">
-            <a class="link" href="${link}">${text} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            <a class="link" href="${safeUrl(link)}" rel="noopener noreferrer" target="_blank">${escapeHtml(text || link)} <i class="fa fa-external-link" aria-hidden="true"></i></a>
         </div>`
-    codeEntryValue = (value) => `<div class="table__col long-line"><pre class="code"><code>${value}</code></pre></div>`
+    codeEntryValue = (value) => `<div class="table__col long-line"><pre class="code"><code>${escapeHtml(value)}</code></pre></div>`
 }
 
 class GlobalInfoWidget extends Backbone.Marionette.View {
